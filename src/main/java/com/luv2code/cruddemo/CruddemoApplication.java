@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import com.luv2code.cruddemo.entity.Student;
 
+import java.util.List;
+
 @SpringBootApplication
 public class CruddemoApplication {
 
@@ -14,23 +16,45 @@ public class CruddemoApplication {
 		SpringApplication.run(CruddemoApplication.class, args);
 	}
 
-
 	@Bean
-	public CommandLineRunner commandLineRunner(StudentDAO studentDAO, Integer id) {
+	public CommandLineRunner commandLineRunner(StudentDAO studentDAO) {
 		return runner -> {
-			findById(studentDAO, 1);
+			queryForStudentByLastName(studentDAO);
 		};
 	}
 
-	private void createStudent(StudentDAO studentDAO){
-		Student tempStudent= new Student("Leo", "Yuhu", "leohuyu@gmail.com");
+	private void createMultipleStudent(StudentDAO studentDAO){
+		Student tempStudent1 = new Student("Ahoy", "Yuhuy", "ahoyuhuy@gmail.com");
+		Student tempStudent2= new Student("Abizhar", "Multazam", "abizharmultazam@gmail.com");
+		Student tempStudent3 = new Student("Syuaib", "Bin Ismail", "syuaibinmail@gmail.com");
+		studentDAO.save(tempStudent1);
+		studentDAO.save(tempStudent2);
+		studentDAO.save(tempStudent3);
+	}
+
+	private void findStudent(StudentDAO studentDAO){
+		Student tempStudent = new Student("Yahoo", "Yohooo","yahoouhuy@gmail.com");
 		studentDAO.save(tempStudent);
-		System.out.println(tempStudent.getId());
+		int id = tempStudent.getId();
+		System.out.println(id);
+		System.out.println(studentDAO.findById(id));
 	}
 
-	private void findById(StudentDAO studentDAO){
+	private void findAll(StudentDAO studentDAO){
+		List<Student> theStudents=studentDAO.findAll();
 
-		studentDAO.findById(id);
-//		System.out.println();
+		for (Student tempStudent : theStudents){
+			System.out.println(tempStudent);
+		}
 	}
+
+	private void queryForStudentByLastName(StudentDAO studentDAO){
+		List<Student>  theStudents = studentDAO.findByLastName("Multazam");
+		for (Student tempStudent : theStudents){
+			System.out.println(tempStudent);
+		}
+	}
+
+
+
 }
